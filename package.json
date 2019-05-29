@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "bootstrap": "^4.3.1",
+    "jquery": "^3.4.1",
+    "webrtc": "^1.14.1"
+  }
+}

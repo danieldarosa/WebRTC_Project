@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+
+    <title>WebRTC project</title>
+</head>
+
+<body>
+
+    <!--Beginning of content-->
+    <div class="container">
+        <section class="header">
+            <h1>WebRTC streaming</h1>
+        </section>
+
+        <section class="video-stream">
+            <div class="row">
+                <div class="col-md-12">
+                    <video id="video" width="100%" controls></video>
+                </div>
+            </div>
+        </section>
+        <hr>
+        <section class="peers-table">
+            <p class="lead"> Number of peers :</p>
+            <div class="table-responsive text-center">
+                <table class="table table-striped">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">IP address</th>
+                            <th scope="col">Bandwidth used P2P</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>10.10.6.6</td>
+                            <td>10.6 Mbps</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">2</th>
+                            <td>141.45.32.63</td>
+                            <td>2.1 Mbps</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">3</th>
+                            <td>211.34.133.41</td>
+                            <td>245 Mbps</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+    <!--End of content-->
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="node_modules/webrtc-adapter/src/js/adapter_core.js"></script>
+    <script type="text/javascript" src="javascript/hls.min.js"></script>
+    <script type="text/javascript" src="javascript/config.js"></script>
+    <script type="text/javascript" src="javascript/lecteur_HLS.js"></script>
+</body>
+
+</html>
