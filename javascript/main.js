@@ -2,9 +2,11 @@ require('./lecteur_HLS');
 var config = require('./config');
 
 //Connect to the signaling server
-var ws = new WebSocket('ws://localhost:9090');
+var ws = new WebSocket(config.signaling_server_ip);
 var STUN_Server = null;
-newConnexion = new RTCPeerConnection(STUN_Server);
+var myConnexion = new RTCPeerConnection(STUN_Server);
+//TODO : Others Peers connection
+
 
 console.log("RTC connexion was created");
 
@@ -68,3 +70,12 @@ function onserver(data) {
 function oncandidate(data) {
     console.log("Candidate : ", data);
 }
+
+//Init send offer when user clicks on play button
+$("#video").on('play', function() {
+    console.log("Entered");
+    myConnexion.createOffer(function(offer) {
+        myConnexion.setLocalDescription(offer);
+        sendtosignaling(parseToMessage('offer', offer));
+    })
+});
