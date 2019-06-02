@@ -1,7 +1,19 @@
 {
+  "name": "P2P-WebRTC-project",
+  "author": "Daniel Da Rosa",
+  "license": "MIT",
+  "version": "0.1.0",
+  "main": "javascript/main.js",
+  "scripts": {
+    "start": "budo javascript/main.js:bundle.js"
+  },
   "dependencies": {
     "bootstrap": "^4.3.1",
     "jquery": "^3.4.1",
-    "webrtc": "^1.14.1"
+    "webrtc": "^1.14.1",
+    "ws": "^7.0.0"
+  },
+  "devDependencies": {
+    "budo": "^11.6.2"
   }
 }

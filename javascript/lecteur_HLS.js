@@ -4,12 +4,12 @@
  * and open the template in the editor.
  */
 
-const SERVERLINK = SERVERADDRESS + SERVERPORT + SERVERLIVE;
+const config = require('./config');
 
 var video = document.getElementById('video');
 if (Hls.isSupported()) {
     var hls = new Hls();
-    hls.loadSource(SERVERLINK);
+    hls.loadSource(config.media_server_address);
     hls.attachMedia(video);
 }
 // hls.js is not supported on platforms that do not have Media Source Extensions (MSE) enabled.
@@ -18,5 +18,5 @@ if (Hls.isSupported()) {
 // Note: it would be more normal to wait on the 'canplay' event below however on Safari (where you are most likely to find built-in HLS support) the video.src URL must be on the user-driven
 // white-list before a 'canplay' event will be emitted; the last video event that can be reliably listened-for when the URL is not on the white-list is 'loadedmetadata'.
 else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-    video.src = SERVERLINK;
+    video.src = config.media_server_address;
 }
