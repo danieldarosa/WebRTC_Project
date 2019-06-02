@@ -11,7 +11,7 @@ console.log("RTC connexion was created");
 //Signaling server listeners
 ws.onopen = function() {
     console.log("Connected");
-    var message = parseToMessage('ping', 'Hi from Daniel');
+    var message = parseToMessage('candidate', 'Hi from Daniel');
     sendtosignaling(message);
 }
 
@@ -24,7 +24,21 @@ ws.onerror= function(err) {
 }
 
 ws.onmessage= function(message) {
-    console.log("Message recieved :", message);
+    var data = JSON.parse(message.data);
+    switch(data.type) {
+        case "offer":
+            onoffer(data);
+            break;
+        case "answer":
+            onserver(data);
+            break;
+        case "candidate":
+            oncandidate(data);
+            break;
+        default:
+            config.log("ERROR : Message not valid");
+            break;
+    }
 }
 
 //Sending message to signaling server
@@ -39,4 +53,18 @@ function parseToMessage(type, data) {
         "data" : data,
         "id" : config.id
     }
+}
+
+//Handle response from signaling server
+
+function onoffer(data) {
+    console.log("Offer : ", data);
+}
+
+function onserver(data) {
+    console.log("Answer : ", data);
+}
+
+function oncandidate(data) {
+    console.log("Candidate : ", data);
 }

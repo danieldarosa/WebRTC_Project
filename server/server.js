@@ -8,6 +8,7 @@ wss.on('connection', function connection(ws) {
     
     ws.on('message', function incoming(message) {
     
+        //message['data']['clients'] = wss.clients;
         console.log('[SERVER LOG]received:', message);
 
         wss.clients.forEach(function each(client) {
