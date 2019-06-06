@@ -6,11 +6,13 @@
 
 const config = require('./config');
 
-var video = document.getElementById('video');
+exports.getStream = function () {
+    var video = document.getElementById('video');
 if (Hls.isSupported()) {
     var hls = new Hls();
     hls.loadSource(config.media_server_address);
     hls.attachMedia(video);
+    video.play();
 }
 // hls.js is not supported on platforms that do not have Media Source Extensions (MSE) enabled.
 // When the browser has built-in HLS support (check using `canPlayType`), we can provide an HLS manifest (i.e. .m3u8 URL) directly to the video element throught the `src` property.
@@ -20,3 +22,6 @@ if (Hls.isSupported()) {
 else if (video.canPlayType('application/vnd.apple.mpegurl')) {
     video.src = config.media_server_address;
 }
+}
+
+

@@ -1,20 +1,47 @@
-require('./lecteur_HLS');
+var streamer = require('./lecteur_HLS');
 var config = require('./config');
 
 //Connect to the signaling server
 var ws = new WebSocket(config.signaling_server_ip);
-var STUN_Server = null;
-var myConnexion = new RTCPeerConnection(STUN_Server);
+var myConnexion = new RTCPeerConnection(config.stun_server);
 var welcomeMessage = "Hi from : " + config.id;
+var stream = null;
+var video = document.getElementById('video');
 //TODO : Others Peers connection
 
+$("#play-btn").click(function() {
+    streamer.getStream();
+    console.log("Entered");
+    myConnexion.createOffer(function(offer) {
+        addStream();
+        console.log(offer);
+        myConnexion.setLocalDescription(offer);
+        sendtosignaling(parseToMessage('offer', offer));
+    }, function (err) {
+        console.log("ERROR LOG : ",err);
+    });
+})
 
 console.log("RTC connexion was created");
+
+myConnexion.onicecandidate = function (event) { 
+    if (event.candidate) {
+        sendtosignaling(parseToMessage("candidate", event.candidate)); 
+    } 
+ };
+ 
+ myConnexion.onaddstream = function (e) {
+     console.log("Hello");
+     if(e !== undefined) {
+        video.stream = e.stream;
+        console.log("Video stream", video.stream); 
+     }
+ };
 
 //Signaling server listeners
 ws.onopen = function() {
     console.log("Connected");
-    var message = parseToMessage('candidate', welcomeMessage);
+    var message = parseToMessage('LOG', welcomeMessage);
     sendtosignaling(message);
 }
 
@@ -27,19 +54,19 @@ ws.onerror= function(err) {
 }
 
 ws.onmessage= function(message) {
-    var data = JSON.parse(message.data);
-    switch(data.type) {
+    var payload = JSON.parse(message.data);
+    switch(payload.type) {
         case "offer":
-            onoffer(data);
+            onoffer(payload);
             break;
         case "answer":
-            onserver(data);
+            onanswer(payload);
             break;
         case "candidate":
-            oncandidate(data);
+            oncandidate(payload);
             break;
         default:
-            config.log("ERROR : Message not valid");
+            console.log("ERROR : Message not valid");
             break;
     }
 }
@@ -60,29 +87,30 @@ function parseToMessage(type, data) {
 
 //Handle response from signaling server
 
-function onoffer(data) {
-    //myConnexion.createAnswer(function (answer) {
-        //myConnexion.setLocalDescription(answer);
-        //sendtosignaling(parseToMessage('answer', answer));
-    //});
-    console.log("Offer : ", data);
-}
-
-function onserver(data) {
-    //myConnexion.setRemoteDescription(new RTCSessionDescription(data));
-    console.log("Answer : ", data);
-}
-
-function oncandidate(data) {
-    //myConnexion.onicecandidate(new RTCIceCandidate(data));
-    console.log("Candidate : ", data);
-}
-
-//Init send offer when user clicks on play button
-$("#video").on('play', function() {
-    console.log("Entered");
-    myConnexion.createOffer(function(offer) {
-        myConnexion.setLocalDescription(offer);
-        sendtosignaling(parseToMessage('offer', offer));
+function onoffer(payload) {
+    console.log("Offer : ", payload);
+    myConnexion.setRemoteDescription(payload.data);
+    myConnexion.createAnswer(function (answer) {
+        myConnexion.setLocalDescription(answer);
+        sendtosignaling(parseToMessage('answer', answer));
+    }, function (err) {
+        console.log(err);
     });
-});
+}
+
+function onanswer(payload) {
+    console.log("Answer : ", payload);
+    myConnexion.setRemoteDescription(new RTCSessionDescription(payload.data));
+}
+
+function oncandidate(payload) {
+    console.log("Candidate : ", payload);
+    myConnexion.addIceCandidate(new RTCIceCandidate(payload.data));
+}
+
+function addStream () {
+    stream =  new MediaStream(video.captureStream());
+    myConnexion.addStream(stream);
+    //myConnexion.addTrack(videotracks);
+    //myConnexion.addTrack(audiotracks);
+}

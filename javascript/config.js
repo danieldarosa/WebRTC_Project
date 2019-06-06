@@ -12,3 +12,6 @@ var random = Math.random().toString();
 exports.id = crypto.createHash('sha256').update(current_date + random).digest('hex');
 
 exports.signaling_server_ip = 'ws://192.168.1.130:9090'
+exports.stun_server = { 
+    "iceServers": [{ "url": "stun:stun2.1.google.com:19302" }]
+ }

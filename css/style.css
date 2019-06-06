@@ -1,8 +1,9 @@
 .header {
     margin-top: 10vh;
-    margin-bottom: 5vh
+    margin-bottom: 5vh;
 }
 
 .video-stream{
+    margin-top: 1vh;
     margin-bottom: 5vh;
 }
