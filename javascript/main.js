@@ -1,5 +1,10 @@
 var streamer = require('./lecteur_HLS');
 var config = require('./config');
+var unload = require('unload');
+
+unload.add(function() {
+    alert('Working');
+})
 
 //Connect to the signaling server
 var ws = new WebSocket(config.signaling_server_ip);
@@ -7,7 +12,7 @@ var myConnexion = new RTCPeerConnection(config.stun_server);
 var welcomeMessage = "Hi from : " + config.id;
 var stream = null;
 var video = document.getElementById('video');
-//TODO : Others Peers connection
+
 
 $("#play-btn").click(function() {
     streamer.getStream();
@@ -41,8 +46,8 @@ myConnexion.onicecandidate = function (event) {
 //Signaling server listeners
 ws.onopen = function() {
     console.log("Connected");
-    var message = parseToMessage('LOG', welcomeMessage);
-    sendtosignaling(message);
+    //log into websocket
+    sendtosignaling(parseToMessage('arrival', {}));
 }
 
 ws.onclose = function() {
