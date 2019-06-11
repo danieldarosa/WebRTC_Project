@@ -84,15 +84,21 @@ function onArrival(message, conn) {
 }
 
 function onOffer(message) {
-
+    /* if(userExists(message.id)) {
+        sendToClient(parseToMessage('offer', message, message.id));
+    } */
 }
 
 function onAnswer(message) {
-
+    /* if (userExists(message.id)) {
+        sendToClient(parseToMessage('answer', message, message.id));
+    } */
 }
 
 function onCandidate(message) {
-    
+    /* if (userExists(message.id)) {
+        sendToClient(parseToMessage('candidate', message, message.id));
+    } */
 }
 
 function onDisconnect(message) {
@@ -107,6 +113,17 @@ function onDisconnect(message) {
     }
 }
 
+/* function parseToMessage(type, data, client) {
+    return {
+        "type" : type,
+        "data" : data,
+        "id" : client
+    }
+} */
+
+/* function sendToClient(message) {
+    ws.send(JSON.stringify(message));
+} */
 
 function userExists(id) {
     for(var key in clients) {
