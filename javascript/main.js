@@ -12,8 +12,7 @@ var myConnexion = new RTCPeerConnection(config.stun_server);
 var welcomeMessage = "Hi from : " + config.id;
 var stream = null;
 var video = document.getElementById('video');
-
-//var peers[];
+var peers = [];
 
 $("#play-btn").click(function () {
     console.log("Entered");
@@ -22,10 +21,14 @@ $("#play-btn").click(function () {
 console.log("RTC connexion was created");
 
 myConnexion.onicecandidate = function (event) {
-    console.log("ON ICE CANDIDATE : ", event);
-    if (event.candidate) {
-        sendtosignaling(parseToMessage("candidate", event.candidate));
+    for(let peer in peers) {
+        console.log("ON ICE CANDIDATE : ", event);
+        if (event.candidate) {
+            console.log("EVENT CANDIDATE OK");
+            sendtosignaling(parseToMessage('candidate', event.candidate, peer));
+        }
     }
+    
 };
 
 myConnexion.onaddstream = function (e) {
@@ -55,6 +58,9 @@ ws.onmessage = function (message) {
     var payload = JSON.parse(message.data);
     switch (payload.type) {
         //case master_id
+        case "master_id":
+            onMasterId(payload);
+            break;
         case "init_offer":
             onInitOffer(payload);
             break;
@@ -90,9 +96,15 @@ function parseToMessage(type, data, dst) {
 
 //Handle response from signaling server
 
+function onMasterId(payload) {
+    var master = payload.src
+    peers.push(master);
+}
+
 function onInitOffer(payload) {
     //FIXME check if already playing
-    streamer.getStream();
+    var stream = streamer.getStream();
+    console.log(stream);
     myConnexion.createDataChannel("test");
     myConnexion.onnegotiationneeded = function () {
         addStream();
@@ -125,7 +137,8 @@ function onanswer(payload) {
 
 function oncandidate(payload) {
     console.log("Candidate : ", payload);
-    myConnexion.addIceCandidate(new RTCIceCandidate(payload.data));
+    var cul = myConnexion.addIceCandidate(new RTCIceCandidate(payload.data));
+    console.log(cul);
 }
 
 function addStream() {

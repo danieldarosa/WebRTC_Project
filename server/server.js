@@ -81,9 +81,13 @@ function onArrival(message, conn) {
         master.conn = conn;
         console.log("Master is now : ", master.id);
     } else {
+        console.log("IS NOT A MASTER");
         //send initOffer to master
+        //Problem here, when a third peer tries to come, it ignores that line
         master.conn.send(parseToMessage('init_offer', {}, message.id))
+        console.log("SENT INIT_OFFER TO MASTER");
         //send to the client the masterid parseToMessage('master_id', {}, master.id))
+        clients[message.id].send(parseToMessage('master_id', {}, master.id));
     }
 }
 
@@ -102,9 +106,9 @@ function onAnswer(message) {
 }
 
 function onCandidate(message) {
-    /* if (userExists(message.id)) {
-        sendToClient(parseToMessage('candidate', message, message.id));
-    } */
+    console.log("GETS IN HERE");
+    console.log(message)
+    clients[message.id].send(parseToMessage('candidate', message.data, message.id));
 }
 
 function onDisconnect(message) {
