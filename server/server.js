@@ -9,7 +9,7 @@ let master = {
     conn: null,
 }
 
-//Client('892849075') = client
+//Client['892849075'] = client
 let clients = {}; 
 
 console.log("[SERVER LOG]Server is running...");
@@ -80,19 +80,25 @@ function onArrival(message, conn) {
         master.id = message.id;
         master.conn = conn;
         console.log("Master is now : ", master.id);
+    } else {
+        //send initOffer to master
+        master.conn.send(parseToMessage('init_offer', {}, message.id))
+        //send to the client the masterid parseToMessage('master_id', {}, master.id))
     }
 }
 
 function onOffer(message) {
-    /* if(userExists(message.id)) {
-        sendToClient(parseToMessage('offer', message, message.id));
-    } */
+    console.log('OFFER : ', message);
+    if(userExists(message.dst)) {
+        clients[message.dst].send(parseToMessage('offer', message.data, message.id));
+    } 
 }
 
 function onAnswer(message) {
-    /* if (userExists(message.id)) {
-        sendToClient(parseToMessage('answer', message, message.id));
-    } */
+    console.log('ANSWER : ', message);
+    if (userExists(message.dst)) {
+        clients[message.dst].send(parseToMessage('answer', message.data, message.id));
+    }
 }
 
 function onCandidate(message) {
@@ -113,17 +119,13 @@ function onDisconnect(message) {
     }
 }
 
-/* function parseToMessage(type, data, client) {
-    return {
+function parseToMessage(type, data, src) {
+    return JSON.stringify({
         "type" : type,
         "data" : data,
-        "id" : client
-    }
-} */
-
-/* function sendToClient(message) {
-    ws.send(JSON.stringify(message));
-} */
+        "src": src
+    })
+}
 
 function userExists(id) {
     for(var key in clients) {

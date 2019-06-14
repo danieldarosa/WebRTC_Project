@@ -2,7 +2,7 @@ var streamer = require('./lecteur_HLS');
 var config = require('./config');
 var unload = require('unload');
 
-unload.add(function() {
+unload.add(function () {
     alert('Working');
 })
 
@@ -13,54 +13,51 @@ var welcomeMessage = "Hi from : " + config.id;
 var stream = null;
 var video = document.getElementById('video');
 
+//var peers[];
 
-$("#play-btn").click(function() {
-    streamer.getStream();
+$("#play-btn").click(function () {
     console.log("Entered");
-    myConnexion.createOffer(function(offer) {
-        addStream();
-        console.log(offer);
-        myConnexion.setLocalDescription(offer);
-        sendtosignaling(parseToMessage('offer', offer));
-    }, function (err) {
-        console.log("ERROR LOG : ",err);
-    });
 })
 
 console.log("RTC connexion was created");
 
-myConnexion.onicecandidate = function (event) { 
+myConnexion.onicecandidate = function (event) {
+    console.log("ON ICE CANDIDATE : ", event);
     if (event.candidate) {
-        sendtosignaling(parseToMessage("candidate", event.candidate)); 
-    } 
- };
- 
- myConnexion.onaddstream = function (e) {
-     console.log("Hello");
-     if(e !== undefined) {
+        sendtosignaling(parseToMessage("candidate", event.candidate));
+    }
+};
+
+myConnexion.onaddstream = function (e) {
+    console.log("Hello");
+    if (e !== undefined) {
         video.stream = e.stream;
-        console.log("Video stream", video.stream); 
-     }
- };
+        console.log("Video stream", video.stream);
+    }
+};
 
 //Signaling server listeners
-ws.onopen = function() {
+ws.onopen = function () {
     console.log("Connected");
     //log into websocket
     sendtosignaling(parseToMessage('arrival', {}));
 }
 
-ws.onclose = function() {
+ws.onclose = function () {
     console.log("Disconnected");
 }
 
-ws.onerror= function(err) {
+ws.onerror = function (err) {
     console.log("Error : ", err);
 }
 
-ws.onmessage= function(message) {
+ws.onmessage = function (message) {
     var payload = JSON.parse(message.data);
-    switch(payload.type) {
+    switch (payload.type) {
+        //case master_id
+        case "init_offer":
+            onInitOffer(payload);
+            break;
         case "offer":
             onoffer(payload);
             break;
@@ -81,23 +78,40 @@ function sendtosignaling(message) {
     ws.send(JSON.stringify(message));
 }
 
-function parseToMessage(type, data) {
-    
+function parseToMessage(type, data, dst) {
+
     return {
-        "type" : type,
-        "data" : data,
-        "id" : config.id
+        "type": type,
+        "data": data,
+        "id": config.id,
+        "dst": dst
     }
 }
 
 //Handle response from signaling server
+
+function onInitOffer(payload) {
+    //FIXME check if already playing
+    streamer.getStream();
+    myConnexion.createDataChannel("test");
+    myConnexion.onnegotiationneeded = function () {
+        addStream();
+        console.log('INIT_OFFER : ', payload);
+        myConnexion.createOffer(function (offer) {
+            myConnexion.setLocalDescription(offer);
+            sendtosignaling(parseToMessage('offer', offer, payload.src));
+        }, function (err) {
+            console.log("ERROR : ", err);
+        })
+    }
+}
 
 function onoffer(payload) {
     console.log("Offer : ", payload);
     myConnexion.setRemoteDescription(payload.data);
     myConnexion.createAnswer(function (answer) {
         myConnexion.setLocalDescription(answer);
-        sendtosignaling(parseToMessage('answer', answer));
+        sendtosignaling(parseToMessage('answer', answer, payload.src));
     }, function (err) {
         console.log(err);
     });
@@ -106,6 +120,7 @@ function onoffer(payload) {
 function onanswer(payload) {
     console.log("Answer : ", payload);
     myConnexion.setRemoteDescription(new RTCSessionDescription(payload.data));
+
 }
 
 function oncandidate(payload) {
@@ -113,8 +128,8 @@ function oncandidate(payload) {
     myConnexion.addIceCandidate(new RTCIceCandidate(payload.data));
 }
 
-function addStream () {
-    stream =  new MediaStream(video.captureStream());
+function addStream() {
+    stream = new MediaStream(video.captureStream());
     myConnexion.addStream(stream);
     //myConnexion.addTrack(videotracks);
     //myConnexion.addTrack(audiotracks);
