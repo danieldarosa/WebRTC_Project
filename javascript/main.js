@@ -136,9 +136,10 @@ function onanswer(payload) {
 }
 
 function oncandidate(payload) {
+    console.log("GOES HERE");
     console.log("Candidate : ", payload);
-    var cul = myConnexion.addIceCandidate(new RTCIceCandidate(payload.data));
-    console.log(cul);
+    var ice = myConnexion.addIceCandidate(new RTCIceCandidate(payload.data));
+    console.log(ice);
 }
 
 function addStream() {
