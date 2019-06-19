@@ -65,6 +65,7 @@ function changeMaster() {
         master.id = client.key;
         master.conn = client.conn;
         console.log("Master changed, now master is : ", master.id);
+        console.log("List of clients : ", getClients());
     }
 }
 
@@ -108,6 +109,7 @@ function onAnswer(message) {
 function onCandidate(message) {
     console.log("GETS IN HERE");
     console.log(message)
+    //Send the candidate message to the client that asked the offer
     clients[message.id].send(parseToMessage('candidate', message.data, message.id));
 }
 
@@ -118,6 +120,8 @@ function onDisconnect(message) {
             changeMaster();
         }
         //Delete from client
+        clients[message.id].send(parseToMessage('disconnect', {}, message.id));
+        console.log(message.id);
         console.log("Client disconnected :", wss.id);
         delete clients[message.id];
     }

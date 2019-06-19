@@ -18,6 +18,10 @@ $("#play-btn").click(function () {
     console.log("Entered");
 })
 
+$("#disconnect-btn").click(function () {
+    sendtosignaling(parseToMessage('disconnect', {}));
+})
+
 console.log("RTC connexion was created");
 
 myConnexion.onicecandidate = function (event) {
@@ -72,6 +76,9 @@ ws.onmessage = function (message) {
             break;
         case "candidate":
             oncandidate(payload);
+            break;
+        case "disconnect":
+            ondisconnect();
             break;
         default:
             console.log("ERROR : Message not valid");
@@ -141,6 +148,14 @@ function oncandidate(payload) {
     var ice = myConnexion.addIceCandidate(new RTCIceCandidate(payload.data));
     console.log(ice);
 }
+
+function ondisconnect() {
+    console.log("Disconnect function entrered");
+    myConnexion.close();
+    myConnexion.onicecandidate = null;
+    myConnexion.onaddstream = null;
+}
+
 
 function addStream() {
     stream = new MediaStream(video.captureStream());
