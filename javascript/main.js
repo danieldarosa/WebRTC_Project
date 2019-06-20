@@ -25,7 +25,7 @@ $("#disconnect-btn").click(function () {
 console.log("RTC connexion was created");
 
 myConnexion.onicecandidate = function (event) {
-    for(let peer in peers) {
+    for(let peer of peers) {
         console.log("ON ICE CANDIDATE : ", event);
         if (event.candidate) {
             console.log("EVENT CANDIDATE OK");
