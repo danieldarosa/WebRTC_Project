@@ -35,6 +35,14 @@ myConnexion.onicecandidate = function (event) {
     
 };
 
+//Channel to send data (not working ffs)
+myConnexion.ondatachannel = function(event) {
+    console.log('Data channel is created!');
+    event.channel.onopen = function() {
+      console.log('Data channel is open and ready to be used.');
+    };
+};
+
 myConnexion.onaddstream = function (e) {
     console.log("Hello");
     if (e !== undefined) {
