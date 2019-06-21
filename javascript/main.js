@@ -9,10 +9,13 @@ unload.add(function () {
 //Connect to the signaling server
 var ws = new WebSocket(config.signaling_server_ip);
 var myConnexion = new RTCPeerConnection(config.stun_server);
+var remoteConnexion = new RTCPeerConnection(config.stun_server);
 var welcomeMessage = "Hi from : " + config.id;
 var stream = null;
 var video = document.getElementById('video');
 var peers = [];
+var sendChannel;
+var recieveChannel;
 
 $("#play-btn").click(function () {
     console.log("Entered");
