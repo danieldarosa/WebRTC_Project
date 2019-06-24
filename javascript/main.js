@@ -81,6 +81,9 @@ ws.onmessage = function (message) {
         case "master_id":
             onMasterId(payload);
             break;
+        case "client_id":
+            onClientId(payload);
+            break;
         case "init_offer":
             onInitOffer(payload);
             break;
@@ -122,6 +125,12 @@ function parseToMessage(type, data, dst) {
 function onMasterId(payload) {
     var master = payload.src
     peers.push(master);
+}
+
+function onClientId(payload) {
+    var client_id = payload.src;
+    console.log(client_id);
+    client.push(client_id);
 }
 
 function onInitOffer(payload) {
@@ -214,13 +223,17 @@ function updateTable() {
 
     //Client cell
     if(client[0] !== null) {
+        console.log("GOES IN HEERERERR")
         var cell_row_21 = row3.insertCell(0);
         var cell_row_22 = row3.insertCell(1);
         var cell_row_23 = row3.insertCell(2);
         cell_row_21.innerHTML = nbTotal;
         cell_row_22.innerHTML = client[0];
+        console.log(client[0]);
         cell_row_23.innerHTML = "Connected";
         nbTotal++;
     }
+    
+
     document.getElementById("lead").innerHTML = "Number of peers : " + nbTotal;
 }   

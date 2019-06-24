@@ -92,6 +92,8 @@ function onArrival(message, conn) {
         console.log("SENT INIT_OFFER TO MASTER");
         //send to the client the masterid parseToMessage('master_id', {}, master.id))
         clients[message.id].send(parseToMessage('master_id', {}, master.id));
+        //sent to the client his id
+        clients[message.id].send(parseToMessage('client_id', {}, message.id));
     }
 }
 
