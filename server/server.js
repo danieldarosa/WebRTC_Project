@@ -10,7 +10,8 @@ let master = {
 }
 
 //Client['892849075'] = client
-let clients = {}; 
+let clients = {};
+var nbPeers = 0; 
 
 console.log("[SERVER LOG]Server is running...");
 
@@ -73,6 +74,8 @@ function updateClients(id, conn) {
     clients[id] = conn;
     console.log("Client added : ", id);
     console.log("List of clients : ", getClients());
+    nbPeers++;
+    console.log("Number of peers : ", nbPeers);
 }
 
 function onArrival(message, conn) {

@@ -22,6 +22,7 @@
         </section>
         <button id="play-btn" class="btn btn-primary">Play</button>
         <button id="disconnect-btn" class="btn btn-primary">Disconnect</button>
+        <button id="update-btn" class="btn btn-primary">Update table</button>
         <section class="video-stream">
             <div class="row">
                 <div class="col-md-12">
@@ -31,14 +32,14 @@
         </section>
         <hr>
         <section class="peers-table">
-            <p class="lead"> Number of peers :</p>
+            <p id="lead"></p>
             <div class="table-responsive text-center">
-                <table class="table table-striped">
+                <table class="table table-striped" id="table table-striped">
+                    <!--
                     <thead class="thead-dark">
                         <tr>
                             <th scope="col">#</th>
                             <th scope="col">IP address</th>
-                            <th scope="col">Bandwidth used P2P</th>
                             <th scope="col">Connexion state</th>
                         </tr>
                     </thead>
@@ -46,22 +47,20 @@
                         <tr>
                             <th scope="row">1</th>
                             <td>10.10.6.6</td>
-                            <td>10.6 Mbps</td>
                             <td>Connected</td>
                         </tr>
                         <tr>
                             <th scope="row">2</th>
                             <td>141.45.32.63</td>
-                            <td>2.1 Mbps</td>
                             <td>Connected</td>
                         </tr>
                         <tr>
                             <th scope="row">3</th>
                             <td>211.34.133.41</td>
-                            <td>245 Mbps</td>
                             <td>Closed</td>
                         </tr>
                     </tbody>
+                -->
                 </table>
             </div>
         </section>
@@ -75,6 +74,9 @@
     <script src="node_modules/webrtc-adapter/out/adapter.js"></script>
     <script src="javascript/hls.min.js"></script>
     <script src="bundle.js"></script>
+    <script>
+        
+    </script>
 </body>
 
 </html>

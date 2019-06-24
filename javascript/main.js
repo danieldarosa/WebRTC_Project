@@ -14,6 +14,7 @@ var welcomeMessage = "Hi from : " + config.id;
 var stream = null;
 var video = document.getElementById('video');
 var peers = [];
+var client = [];
 var sendChannel;
 var recieveChannel;
 
@@ -23,6 +24,10 @@ $("#play-btn").click(function () {
 
 $("#disconnect-btn").click(function () {
     sendtosignaling(parseToMessage('disconnect', {}));
+})
+
+$("#update-btn").click(function () {
+    updateTable();
 })
 
 console.log("RTC connexion was created");
@@ -158,6 +163,8 @@ function oncandidate(payload) {
     console.log("Candidate : ", payload);
     var ice = myConnexion.addIceCandidate(new RTCIceCandidate(payload.data));
     console.log(ice);
+    console.log(payload.src);
+    client.push(payload.src);
 }
 
 function ondisconnect() {
@@ -174,3 +181,46 @@ function addStream() {
     //myConnexion.addTrack(videotracks);
     //myConnexion.addTrack(audiotracks);
 }
+
+function updateTable() {
+    var table = document.getElementById("table table-striped");
+    var row1 = table.insertRow(0);
+    var row2 = table.insertRow(1);
+    row2.style.color = 'blue';
+    var row3 = table.insertRow(2);
+    var nbTotal = 0;
+
+    //Title cells
+    var cell_row_01 = row1.insertCell(0);
+    var cell_row_02 = row1.insertCell(1);
+    var cell_row_03 = row1.insertCell(2);
+    cell_row_01.innerHTML = "#";
+    cell_row_02.innerHTML = "ID";
+    cell_row_03.innerHTML = "Connexion status";
+    
+    
+    //Master cell
+    var cell_row_11 = row2.insertCell(0);
+    var cell_row_12 = row2.insertCell(1);
+    var cell_row_13 = row2.insertCell(2);
+    cell_row_11.innerHTML = nbTotal;
+    if (peers[0] == null) {
+        cell_row_12.innerHTML = "You are the master !"
+    } else {
+        cell_row_12.innerHTML = peers[0];
+    }
+    cell_row_13.innerHTML = "Connected";
+    nbTotal++;
+
+    //Client cell
+    if(client[0] !== null) {
+        var cell_row_21 = row3.insertCell(0);
+        var cell_row_22 = row3.insertCell(1);
+        var cell_row_23 = row3.insertCell(2);
+        cell_row_21.innerHTML = nbTotal;
+        cell_row_22.innerHTML = client[0];
+        cell_row_23.innerHTML = "Connected";
+        nbTotal++;
+    }
+    document.getElementById("lead").innerHTML = "Number of peers : " + nbTotal;
+}   
