@@ -171,10 +171,9 @@ function getNextClient() {
 
 function onInfo(id) {
     data = {
-        master: master.key,
+        master: master.id,
         clients: getClients()
     }
-    master.conn.send(parseToMessage('info', data, id));
     for (let key in clients) {
         clients[key].send(parseToMessage('info', data, id));
     }

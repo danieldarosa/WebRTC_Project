@@ -185,7 +185,6 @@ function ondisconnect() {
 }
 
 function oninfo(payload) {
-    console.log("Payload : ", payload);
     peers = payload.data.clients;
     master = payload.data.master;
     console.log("Clients : ", peers);
