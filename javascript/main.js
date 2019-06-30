@@ -24,10 +24,11 @@ $("#play-btn").click(function () {
 
 $("#disconnect-btn").click(function () {
     sendtosignaling(parseToMessage('disconnect', {}));
+    ondisconnect();
 })
 
 $("#update-btn").click(function () {
-    updateTable();
+    sendtosignaling(parseToMessage('info', {}));
 })
 
 console.log("RTC connexion was created");
@@ -96,8 +97,8 @@ ws.onmessage = function (message) {
         case "candidate":
             oncandidate(payload);
             break;
-        case "disconnect":
-            ondisconnect();
+        case "info":
+            oninfo(payload);
             break;
         default:
             console.log("ERROR : Message not valid");
@@ -183,6 +184,14 @@ function ondisconnect() {
     myConnexion.onaddstream = null;
 }
 
+function oninfo(payload) {
+    console.log("Payload : ", payload);
+    peers = payload.data.clients;
+    master = payload.data.master;
+    console.log("Clients : ", peers);
+    console.log("Master : ", master);
+    updateTable();
+}
 
 function addStream() {
     stream = new MediaStream(video.captureStream());

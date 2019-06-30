@@ -38,6 +38,9 @@ wss.on('connection', function connection(ws) {
             case 'disconnect':
                 onDisconnect(json_message);
                 break;
+            case 'info':
+                onInfo(json_message.id);
+                break;
             default:
                 console.log("ERROR : Message cannot be parsed");
         }
@@ -121,14 +124,12 @@ function onCandidate(message) {
 function onDisconnect(message) {
     //Check if it's master
     if (userExists(message.id)) {
+        delete clients[message.id];
         if(isMaster(message.id)) {
             changeMaster();
         }
         //Delete from client
-        clients[message.id].send(parseToMessage('disconnect', {}, message.id));
         console.log(message.id);
-        console.log("Client disconnected :", wss.id);
-        delete clients[message.id];
     }
 }
 
@@ -167,3 +168,14 @@ function getNextClient() {
             conn: clients[key]
     }
 }}
+
+function onInfo(id) {
+    data = {
+        master: master.key,
+        clients: getClients()
+    }
+    master.conn.send(parseToMessage('info', data, id));
+    for (let key in clients) {
+        clients[key].send(parseToMessage('info', data, id));
+    }
+}
