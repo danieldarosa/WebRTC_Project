@@ -125,6 +125,8 @@ function onDisconnect(message) {
     //Check if it's master
     if (userExists(message.id)) {
         delete clients[message.id];
+        nbPeers--;
+        console.log(nbPeers);
         if(isMaster(message.id)) {
             changeMaster();
         }

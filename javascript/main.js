@@ -18,10 +18,6 @@ var client = [];
 var sendChannel;
 var recieveChannel;
 
-$("#play-btn").click(function () {
-    console.log("Entered");
-})
-
 $("#disconnect-btn").click(function () {
     sendtosignaling(parseToMessage('disconnect', {}));
     ondisconnect();
@@ -64,6 +60,9 @@ myConnexion.onaddstream = function (e) {
 ws.onopen = function () {
     console.log("Connected");
     //log into websocket
+    var stream = streamer.getStream();
+    console.log(stream);
+    addStream();
     sendtosignaling(parseToMessage('arrival', {}));
 }
 
@@ -136,11 +135,8 @@ function onClientId(payload) {
 
 function onInitOffer(payload) {
     //FIXME check if already playing
-    var stream = streamer.getStream();
-    console.log(stream);
     myConnexion.createDataChannel("test");
     myConnexion.onnegotiationneeded = function () {
-        addStream();
         console.log('INIT_OFFER : ', payload);
         myConnexion.createOffer(function (offer) {
             myConnexion.setLocalDescription(offer);
@@ -173,7 +169,6 @@ function oncandidate(payload) {
     console.log("Candidate : ", payload);
     var ice = myConnexion.addIceCandidate(new RTCIceCandidate(payload.data));
     console.log(ice);
-    console.log(payload.src);
     client.push(payload.src);
 }
 
