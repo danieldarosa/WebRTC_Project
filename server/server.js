@@ -115,7 +115,6 @@ function onAnswer(message) {
 }
 
 function onCandidate(message) {
-    console.log("GETS IN HERE");
     console.log(message)
     //Send the candidate message to the client that asked the offer
     clients[message.dst].send(parseToMessage('candidate', message.data, message.id));

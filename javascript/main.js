@@ -165,7 +165,6 @@ function onanswer(payload) {
 }
 
 function oncandidate(payload) {
-    console.log("GOES HERE");
     console.log("Candidate : ", payload);
     var ice = myConnexion.addIceCandidate(new RTCIceCandidate(payload.data));
     console.log(ice);
@@ -226,7 +225,6 @@ function updateTable() {
 
     //Client cell
     if(client[0] !== null) {
-        console.log("GOES IN HEERERERR")
         var cell_row_21 = row3.insertCell(0);
         var cell_row_22 = row3.insertCell(1);
         var cell_row_23 = row3.insertCell(2);
