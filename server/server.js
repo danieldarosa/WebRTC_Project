@@ -1,3 +1,10 @@
+/*
+Author : Daniel Da Rosa
+Project : WebRTC Demo
+File : server.js
+Version : 1.0
+*/
+
 const WebSocket = require('ws');
 const wss = new WebSocket.Server({
     port: 9090,

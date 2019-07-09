@@ -1,3 +1,11 @@
+/*
+Author : Daniel Da Rosa
+Project : WebRTC Demo
+File : config.js
+Version : 1.0
+*/
+
+
 var crypto = require('crypto');
 //Media server info
 var SERVERADDRESS = 'http://129.194.185.47';

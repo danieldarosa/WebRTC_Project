@@ -1,3 +1,10 @@
+/*
+Author : Daniel Da Rosa
+Project : WebRTC Demo
+File : main.js
+Version : 1.0
+*/
+
 var streamer = require('./lecteur_HLS');
 var config = require('./config');
 var unload = require('unload');
